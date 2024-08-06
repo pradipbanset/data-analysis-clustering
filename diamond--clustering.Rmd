@@ -1,0 +1,208 @@
+---
+title: "Tutorial 3"
+author: "Pradip Basnet"
+---
+
+task 1: installing the necesary packages for data manipulation and visualization
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+#install.packages("skimr")
+```
+```{r}
+library(skimr)
+```
+
+```{r}
+#install.packages("dplyr")
+```
+```{r}
+library(dplyr)
+```
+task 2: viewing the dataset
+```{r}
+library(ggplot2)
+
+# Load the diamonds dataset
+data(diamonds)
+
+```
+
+task 3: viewing the first six rows of the datasets
+```{r}
+head(diamonds)
+```
+task 4: viewing the last six rows of the datset
+```{r}
+tail(diamonds)
+```
+task 5: check the structure of the dataset
+```{r}
+str(diamonds)
+```
+task 6: check the dimension of the datset
+```{r}
+dim(diamonds)
+```
+task 7: summarize the data
+```{r}
+summary(diamonds)
+```
+task 8: install the library psych
+```{r}
+#install.packages("psych")
+
+library(psych)
+describe(diamonds)
+```
+task 9: obtaining the concise overview of the data set by displaying the structure and a preview of its contents.
+```{r}
+glimpse(diamonds)
+```
+task 10: summary of the counts for each unique value in the "cut" column of the diamonds
+```{r}
+diamonds %>%
+  count(cut)
+```
+task 11: generates a frequency table of the "cut" variable in the diamonds dataset.
+```{r}
+table(diamonds$cut)
+```
+task 12:obtain both the frequency information and the distinct values of the dataset
+```{r}
+unique(diamonds$cut)
+```
+##Visualization
+
+#Categorical variables
+task 1: visual representation of the distribution of diamond cuts in the dataset(bar chart looking at diamond cut)
+```{r}
+ggplot(diamonds) + geom_bar(aes(x = cut))
+```
+##Continous Variable
+task 2:a histogram plot that displays the distribution of the "carat" variable in the diamonds data set
+```{r}
+ggplot(diamonds) +
+  geom_histogram(aes(x = carat), binwidth = 0.5)
+```
+##Data Cleaning
+task 1: filter data set to create new data set that contain all the information from the original data set, but only for diamonds with a carat value less than 3
+```{r}
+small <- diamonds %>% filter(carat < 3)
+```
+
+task 2: visual representation of the distribution of carat values for smaller diamonds in data set, allowing you to observe count of diamonds within each bin.
+```{r}
+ggplot(small) +
+  geom_histogram(aes(x = carat), binwidth = 0.1)
+```
+##Covariation
+
+#Categorical vs Continous
+task 1:create a frequency polygon plot that displays the distribution of diamond prices in the diamonds data set
+```{r}
+ggplot(diamonds, aes(x=price)) +
+  geom_freqpoly(aes(color=cut), binwidth = 500, linewidth=1.5)
+```
+task 2:create a box plot that visualizes the distribution of diamond prices across different categories of the "cut" variable
+```{r}
+ggplot(diamonds, aes(x=cut, y=price)) + geom_boxplot()
+```
+task 3 :grouping and counting on the "color" and "cut" variables in the data set and creates a tile plot to visualize the counts of combinations
+```{r}
+diamonds %>% count(color, cut) %>% ggplot(aes(x=color, y=cut)) + geom_tile(aes(fill=n))
+```
+##Continous vs Continous
+task 1:creates a scatter plot that displays the relationship between the carat and price variables of diamonds in the diamonds data set
+```{r}
+ggplot(diamonds, aes(x=carat, y=price)) + geom_point(alpha=1/100)
+```
+task 2:create hexbin plot that visualizes the density of data points based on the "carat" and "price" variables in data set.
+```{r}
+ggplot(diamonds)+geom_hex(aes(x=carat, y=price))
+```
+task 3:create a dodged bar plot that displays the distribution of diamonds based on their "cut" and "clarity" attributes
+```{r}
+ggplot(diamonds,aes(x=cut,fill=clarity)) + geom_bar(position = "dodge")
+```
+
+```{r}
+#calculate the distribution of the transmisson
+trans_dist <- table(diamonds$cut)
+
+# Create pie chart
+pie(trans_dist, 
+    labels = c("Fair", "Good", "Very Good", "Premium", "Ideal"), 
+    main = "Quality of cut")
+```
+#clustering
+task 1: loading the necessary packages
+```{r}
+library(ggplot2)
+#install.packages("factoextra")
+library(factoextra)
+```
+task 2: set a random seed
+```{r}
+set.seed(7696)
+```
+
+
+task 3: viewing the dataset 
+```{r}
+data("diamonds")
+#View(diamonds)
+```
+
+task 4: filter data by column name
+```{r}
+data1 =  diamonds[,c("price", "carat")]
+```
+
+task 5: draw a scatter plot
+```{r}
+ggplot(diamonds, aes(x=price, y=carat))+geom_point()
+```
+task 6: cluster
+```{r}
+clusters = kmeans(data1,5)
+clusters
+```
+task 8:
+```{r}
+cluster_index = as.factor(clusters$cluster)
+ggplot(data1, aes(x=price, y=carat, color=cluster_index)) +geom_point()
+```
+task 9: filter data by column name
+```{r}
+data2 = diamonds[,c("price", "carat","table")]
+
+```
+
+task 10: 
+```{r}
+ggplot(diamonds, aes(x = price, y = carat, color = table)) + geom_point()
+```
+task 11: clustering
+```{r}
+clusters1 = kmeans(data2, 5)
+clusters1
+```
+task 12:
+```{r}
+  fviz_cluster(clusters1, data = data2, geom = c("point"))
+```
+
+```{r}
+clusters3 = kmeans(data2, 5, nstart=25)
+clusters3
+fviz_cluster(clusters3, data=data2, geom=c("point"))
+```
+
+
+
+
+ 
